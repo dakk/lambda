@@ -5,6 +5,17 @@ Install with: ```opam install lambda```
 Documentation is available at [https://dakk.github.com/lambda](https://dakk.github.com/lambda).
 
 
+```ocaml
+let t = Abs("x",Abs("y",Var "x"));; 
+let f = Abs("x",Abs("y",Var "y"));;
+(* (λx.(λy.((y x) y))) *)
+let fand = (Abs ("x", (Abs("y", App(App(Var "y", Var "x"), Var "y"))))) in
+let fand_app a b = App(App(fand, Bool.of_bool a), Bool.of_bool b) in
+Printf.printf "%b and %b => %b\n" true true (Bool.to_bool @@ L.reduce_fix @@ fand_app true true);
+Printf.printf "%b and %b => %b\n" true false (Bool.to_bool @@ L.reduce_fix @@ fand_app true false);
+```
+
+
 ## License
 
 ```
