@@ -1,8 +1,8 @@
 # λ-calculus ocaml library
 
-Install with: ```opam install lambda``
+Install with: ```opam install lambda```
 
-Docs at (docs)[https://dakk.github.com/lambda].
+Documentation is available at [https://dakk.github.com/lambda](https://dakk.github.com/lambda).
 
 
 ## License
