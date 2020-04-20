@@ -5,6 +5,8 @@
 
 (executable
  (name interp)
+ (public_name lambda_i)
+ (libraries lambda)
  (modules ("interp")))
 
 (ocamllex lexer)
