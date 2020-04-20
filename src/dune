@@ -1,4 +1,5 @@
 (library
+ (public_name lambda)
  (name lambda)
  (modules ("bool" "church" "l" "parse" "parser" "lexer")))
 
