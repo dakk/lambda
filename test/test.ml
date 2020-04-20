@@ -2,7 +2,7 @@ open OUnit2;;
 
 let dummy () octx = assert_equal true true;;
 
-let suite = "lambda.parse" >::: Parse_test.tlist @ [
+let suite = "lambda" >::: [
 	"dummy"	>:: dummy ();	
 ];;
 

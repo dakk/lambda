@@ -1,9 +1,9 @@
 opam-version: "2.0"
 name: "lambda"
 version: "0.1.7"
-synopsis: "Lambda calculus library"
+synopsis: "λ-calculus ocaml library"
 description: """
-Lambda calculus library for OCaml. Modules documentation is 
+λ-calculus ocaml library. Modules documentation is 
 available at https://dakk.github.io/lambda/
 """
 maintainer: "Davide Gessa <gessadavide@gmail.com>"
