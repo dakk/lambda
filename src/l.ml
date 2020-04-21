@@ -118,25 +118,33 @@ let reduce_fix t =
   reduce_fix' t
 ;;
 
-let reduce_fix_timeout ?(n=128) t = 
-  let rec subst' x t' t n' = if n' = 0 then t else match t with
-    Var y -> if x=y then t' else Var y
-  | App(t0,t1) -> App(subst' x t' t0 (n'-1), subst' x t' t1 (n'-1))
-  | Abs(y,t0) when y=x -> Abs(x,t0)
-  | Abs(y,t0) when y!=x && not (member y (fv t')) -> Abs(y, subst' x t' t0 (n'-1))
+let reduce_fix_timeout ?(n=512) (t: term) = 
+  let rec subst' x t' t n' = if n' <= 0 then (t, n') else match t with
+    Var y -> if x=y then (t', n') else (Var y, n')
+  | App(t0,t1) -> 
+    let a = subst' x t' t0 (n'-1) in
+    let b = subst' x t' t1 (snd a) in
+    (App(fst a, fst b), snd b)
+  | Abs(y,t0) when y=x -> (Abs(x,t0), n')
+  | Abs(y,t0) when y!=x && not (member y (fv t')) -> 
+    let a = subst' x t' t0 (n'-1) in (Abs(y, fst a), snd a)
   | Abs(y,t0) when y!=x && member y (fv t') -> 
-    let z = gensym() in Abs(z,subst' x t' (subst' z (Var y) t0 (n'-1)) (n'-1))
+    let z = gensym() in 
+    let a = subst' z (Var y) t0 (n'-1) in
+    let b = subst' x t' (fst a) (snd a) in
+      (Abs(z, fst b), snd b)
   in
-  let rec reduce1' t n' = if not (has_redex t) || n' = 0 then t else match t with
-    Abs(x,t') -> Abs(x,reduce1' t' (n'-1))
-  | App(Abs(x,t0),t1) -> subst' x t1 t0 (n'-1)
-  | App(t0,t1) -> if has_redex t0 then App(reduce1' t0 (n'-1),t1) else App(t0,reduce1' t1 (n'-1))
+  let rec reduce1' t n' = if not (has_redex t) || n' <= 0 then (t, n') else match t with
+    Abs(x,t') -> let a = reduce1' t' (n'-1) in (Abs(x,fst a), snd a)
+  | App(Abs(x,t0),t1) -> subst' x t1 t0 (n'-1) 
+  | App(t0,t1) -> if has_redex t0 then (let a = reduce1' t0 (n'-1) in (App(fst a,t1), snd a))
+      else (let a = reduce1' t1 (n'-1) in (App(t0,fst a), snd a))
   in  
   let rec reduce_fix' t n' = 
-  	let t' = reduce1' t (n'-1) in if t'=t || n' = 0 then t' else reduce_fix' t' (n'-1) 
+  	let (t', n') = reduce1' t (n'-1) in if t'=t || n' <= 0 then (t', n') else reduce_fix' t' (n'-1) 
   in
   vcount := 0;
-  reduce_fix' t n
+  fst @@ reduce_fix' t n
 ;;
 
 
