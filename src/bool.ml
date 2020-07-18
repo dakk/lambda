@@ -12,8 +12,8 @@ let of_bool b = match b with
 
 let to_bool t =
   match t with 
-  | Abs("x", Abs("y", Var "x")) -> true
-  | Abs("x", Abs("y", Var "y")) -> false
+  | Abs(x, Abs(y, Var z)) -> if x = z then true else raise NotABoolTerm
+  | Abs(_, Abs(y, Var z)) -> if y = z then false else raise NotABoolTerm
   | _ -> raise NotABoolTerm
 ;;
 
