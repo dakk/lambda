@@ -2,7 +2,7 @@
 
 Install with: ```opam install lambda```
 
-Documentation is available at [https://dakk.github.com/lambda](https://dakk.github.com/lambda).
+Documentation is available at [https://dakk.github.io/lambda](https://dakk.github.io/lambda).
 
 
 ```ocaml
@@ -19,7 +19,7 @@ Printf.printf "%b and %b => %b\n" true false (Bool.to_bool @@ L.reduce_fix @@ fa
 ## License
 
 ```
-Copyright (c) 2020 Davide Gessa
+Copyright (c) 2020-2022 Davide Gessa
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
